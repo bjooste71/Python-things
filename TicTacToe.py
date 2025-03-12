@@ -19,10 +19,6 @@ def playercharacter():
 
     return (player1, player2)
 
-playercharacter()
-
-player1marker, player2marker = playercharacter
-
 
 def displayboard(board):
     print('\n' *100)
