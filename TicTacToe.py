@@ -1,6 +1,9 @@
+import time
 import random
+import requests
+import json
 
-def playercharacter():
+'''def playercharacter():
     marker = ''
     while marker not in ['O','X']:
         marker = input('Player 1, please select a marker: (O or X) ')
@@ -8,7 +11,27 @@ def playercharacter():
     player1 = marker
     player2 = 'O' if player1 == 'X' else 'X'
 
-    return player1, player2
+    return player1, player2'''
+
+
+url = "https://bjtestfunctionapp-geh4hvf2dpf4eah9.southafricanorth-01.azurewebsites.net/api/playermarker?"
+
+markerinput = input('please input a character (X or O)')
+
+while markerinput not in ['O', 'X']:
+    markerinput = input('please input a character (X or O)')
+
+request = requests.post(url, json={'marker' : markerinput})
+
+
+
+
+
+json_response = request.json()
+print(request.status_code)
+
+
+
 
 
 def displayboard(board):
@@ -49,46 +72,62 @@ def index_choice(board, current_player):
             print("Invalid input. Please enter a number between 1 and 9.")
 
 
-def aichoice(board):
+'''def aichoice(board):
     choice = random.randrange(1, 10)
     while board[choice] != '':
         choice = random.randrange(1, 10)
-    return choice
+    return choice'''
+
+
+aichoiceurl = 'https://bjtestfunctionapp-geh4hvf2dpf4eah9.southafricanorth-01.azurewebsites.net/api/aiplayerchoice?'
 
 
 def play_game():
     current_board, playercounter, current_player = reset_game()
 
-    player1marker, player2marker = playercharacter()
+    while request.status_code != 200:
+        print("Error: Unable to retrieve player markers.")
+    
+    else:
 
-    while '' in current_board:
-        if playercounter % 2 != 0:
-            current_player = 1
-            chosenindex = index_choice(current_board, current_player)
-            current_board[chosenindex] = player1marker
-            displayboard(current_board)
+        player1 = json_response['player1']
+        player2 = json_response['player2']
 
-            if check_winner(current_board, player1marker):
-                print("Player 1 wins!\n\nThis TicTacToe session has been powered by Dentsu Merkury for Kids © 2025 Merkury")
-                break
 
-            playercounter += 1
 
-        else:
-            current_player = 2
-            chosenindex = aichoice(current_board)
-            current_board[chosenindex] = player2marker
-            displayboard(current_board)
+        while '' in current_board:
+            if playercounter % 2 != 0:
+                current_player = 1
+                chosenindex = index_choice(current_board, current_player)
+                current_board[chosenindex] = player1
+                displayboard(current_board)
 
-            if check_winner(current_board, player2marker):
-                print("Player 2 wins!\n\nThis TicTacToe session has been powered by Dentsu Merkury for Kids © 2025 Merkury")
-                break
+                if check_winner(current_board, player1):
+                    print("Player 1 wins!\n\nThis TicTacToe session has been powered by Dentsu Merkury for Kids © 2025 Merkury")
+                    break
 
-            playercounter += 1
+                playercounter += 1
 
-    play_again = input("Thank you for playing.\nDo you want to play again? (y/n): ").strip().lower()
-    if play_again == 'y':
-        play_game()
+            else:
+                current_player = 2
+                requestaihoice =  requests.post(aichoiceurl, json={'board' : current_board})
 
+
+                json_responseai = requestaihoice.json()
+                print(requestaihoice.status_code)
+                print(requestaihoice.text)
+
+
+                current_board[json_responseai['choice']] = player2
+                displayboard(current_board)
+                if check_winner(current_board, player2):
+                    print("Player 2 wins!\n\nThis TicTacToe session has been powered by Dentsu Merkury for Kids © 2025 Merkury")
+                    break
+
+                playercounter += 1
+
+        play_again = input("Thank you for playing.\nDo you want to play again? (y/n): ").strip().lower()
+        if play_again == 'y':
+            play_game()
 
 play_game()

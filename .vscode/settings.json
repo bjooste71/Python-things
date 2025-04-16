@@ -1,9 +1,10 @@
 {
-    "azureFunctions.deploySubpath": "Azure Functions/Test_HelloWorld",
+    "azureFunctions.deploySubpath": "Azure Functions/bjtictactoefunctions",
     "azureFunctions.scmDoBuildDuringDeployment": true,
     "azureFunctions.projectLanguage": "Python",
     "azureFunctions.projectRuntime": "~4",
     "debug.internalConsoleOptions": "neverOpen",
     "azureFunctions.projectLanguageModel": 2,
-    "azureFunctions.projectSubpath": "Azure Functions/Test_HelloWorld"
+    "azureFunctions.projectSubpath": "Azure Functions/bjtictactoefunctions",
+    "azureFunctions.pythonVenv": ".venv"
 }
